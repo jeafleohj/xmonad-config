@@ -1,0 +1,35 @@
+#+title: README
+
+* Install Desktop
+
+To install the desktop, follow these steps:
+
+- Execute the build script:
+  #+begin_src sh
+  ./build
+  #+end_src
+
+- Create a symbolic link for ~xmonad~:
+  #+begin_src sh
+  ln -sf ~/.cabal/bin/xmonad-x86_64-linux ~/.local/bin/xmonad
+  #+end_src
+
+* Enable Xmonad Desktop on Xsession
+
+To enable the Xmonad desktop environment in your X session, follow these steps:
+
+- Create a new desktop entry file at =~/usr/share/xsessions/xmonad.desktop= with the following content:
+  #+begin_src desktop
+  [Desktop Entry]
+  Version=1.0
+  Type=Application
+  Name=Xmonad
+  Comment=Lightweight X11 tiled window manager written in Haskell
+  Exec=xmonad
+  Icon=xmonad
+  Terminal=false
+  StartupNotify=false
+  Categories=Application;
+  #+end_src
+
+This will add Xmonad as an option in your display manager's session list.

@@ -1,0 +1,20 @@
+#!/bin/bash -eu
+
+SRC_DIR=$HOME/.config/xmonad-config
+
+export PATH="$HOME/.ghcup/bin:$HOME/.cabal/bin:$PATH"
+
+cd "$SRC_DIR"
+
+notify-send "Compilation start"
+
+# Build the project
+cabal v2-build
+cabal v2-install --install-method=copy --overwrite-policy=always
+
+# Notify about the build status
+if [ $? -eq 0 ]; then
+    notify-send "Compilation successful 🔥"
+else
+    notify-send -u critical "Compilation failed 💀"
+fi
