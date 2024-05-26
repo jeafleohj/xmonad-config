@@ -7,6 +7,9 @@ module Util.Plugins
 import Xmobar
 import System.Process
 import Text.Printf (printf)
+import Control.Exception (SomeException)
+import System.IO
+import GHC.IO (catch)
 
 data Volume = Volume String Int deriving (Read, Show)
 
@@ -29,7 +32,13 @@ displayVolumen percentage isMuted =
 
 getCurrentVolumenInfo :: IO (Int, Bool)
 getCurrentVolumenInfo = do
- info <- words  <$> readProcess "pamixer" ["--get-volume", "--get-mute"] ""
- let percentage = read . last $ info
-     isMuted = head info == "true"
- return (percentage, isMuted)
+  info <- words <$> catch (readProcess "pamixer" ["--get-volume", "--get-mute"] "") (handleError "false 0")
+  let percentage = read . last $ info
+      isMuted = head info == "true"
+  return (percentage, isMuted)
+
+handleError :: String -> SomeException -> IO String
+handleError defaultValue e = do
+  let err = show e
+  hPutStrLn stderr $ "Error: " ++ err
+  return defaultValue
